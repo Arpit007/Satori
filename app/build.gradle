@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.dauntless.starkx.satori"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -27,4 +27,8 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation 'com.android.support:design:25.4.0'
+
+    compile 'com.google.android.gms:play-services-vision:10.2.0'
+    compile 'com.android.support:design:25.3.0'
 }
