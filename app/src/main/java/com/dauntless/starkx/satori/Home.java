@@ -98,11 +98,12 @@ public class Home extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if(position == 1) {
-                return FragmentChat.newInstance(position + 1);
-            }else if(position == 0) {
+                return FragmentChat.newInstance();
+            }else if(position == 2) {
                 return FragmentContacts.newInstance();
             }else {
-                return FragmentCamera.newInstance(position + 1);
+                //for zero
+                return FragmentCamera.newInstance();
             }
         }
         @Override

@@ -11,23 +11,14 @@ import android.view.ViewGroup;
  */
 
 public class FragmentChat extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
     public FragmentChat() {
     }
-
-    public static FragmentChat newInstance(int sectionNumber) {
+    public static FragmentChat newInstance() {
         FragmentChat fragment = new FragmentChat();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
         return fragment;
     }
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.activity_start_chat, container, false);
         return rootView;
     }
 }

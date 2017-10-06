@@ -9,4 +9,8 @@
     <string name="permission_camera_rationale">This app needs access to the camera in order to detect people’s faces.</string>
     <string name="no_camera_permission">This app can’t run because it doesn’t have permission to use the camera. It will now exit.</string>
     <string name="low_storage_error">This app can’t download the face detector components it needs because this device has too little available storage.</string>
+
+    <string name="type_your_message">Type a message</string>
+    <string name="NoRecent">No recent</string>
+
 </resources>

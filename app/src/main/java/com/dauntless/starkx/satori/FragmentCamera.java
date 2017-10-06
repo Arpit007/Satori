@@ -54,11 +54,8 @@ public class FragmentCamera extends Fragment {
     }
 
 
-    public static FragmentCamera newInstance(int sectionNumber) {
+    public static FragmentCamera newInstance() {
         FragmentCamera fragment = new FragmentCamera();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
         return fragment;
     }
 
