@@ -3,14 +3,17 @@ package com.dauntless.starkx.satori;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.dauntless.starkx.satori.Adapter.ContactsAdapter;
+import com.dauntless.starkx.satori.Model.Contacts;
 
 import java.util.ArrayList;
 
@@ -22,8 +25,7 @@ public class FragmentContacts extends Fragment {
 
     private ListView contactList;
     private ContactsAdapter contactsAdapter;
-    private ArrayList<String> contactName ;
-    private ArrayList<String> contactNumber ;
+    private ArrayList<Contacts> contactDetails ;
 
     public FragmentContacts() {
     }
@@ -37,10 +39,23 @@ public class FragmentContacts extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactList = (ListView) rootView.findViewById(R.id.contactsList);
-        contactName = new ArrayList<>();
-        contactNumber = new ArrayList<>();
+        contactDetails = new ArrayList<>();
+
 
         getContacts();
+        contactsAdapter = new ContactsAdapter( getActivity() , contactDetails , getContext());
+        contactList.setAdapter(contactsAdapter);
+
+        contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Contacts contacts= contactDetails.get(position);
+
+                Snackbar.make(view, contacts.name+"\n"+contacts.number, Snackbar.LENGTH_LONG)
+                        .setAction("No action", null).show();
+            }
+        });
         return rootView;
     }
 
@@ -51,13 +66,9 @@ public class FragmentContacts extends Fragment {
         while (cursor.moveToNext()) {
             name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contactName.add(name);
-            contactNumber.add(number);
+            contactDetails.add(new Contacts(name ,number));
 //            Log.d("FragmentContacs" , name + " \n"  + number);
         }
         cursor.close();
-        Log.d("FragmentContacs" , contactName.size() + "narefffffffffffffffffffffffffffffffffffffffffffffffffff");
-        contactsAdapter = new ContactsAdapter( getActivity() , contactName , contactNumber);
-        contactList.setAdapter(contactsAdapter);
     }
 }
