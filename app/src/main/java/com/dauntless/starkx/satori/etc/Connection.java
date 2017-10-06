@@ -16,7 +16,7 @@ import okhttp3.Response;
 
 public class Connection
 {
-	public static final String BaseUrl = "";
+	public static final String BaseUrl = "https://stark-wallet.herokuapp.com/natal";
 	static final MediaType jsonType = MediaType.parse("application/json; charset=utf-8");
 	static OkHttpClient client = new OkHttpClient();
 

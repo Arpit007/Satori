@@ -8,57 +8,67 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import com.dauntless.starkx.satori.Model.Contacts;
 import com.dauntless.starkx.satori.R;
+
 import java.util.ArrayList;
 
 /**
  * Created by sonu on 6/10/17.
  */
 
-public class ContactsAdapter extends ArrayAdapter<Contacts> {
+public class ContactsAdapter extends ArrayAdapter<Contacts>
+{
 
-    private static LayoutInflater inflater = null;
-    private Activity activity;
-    private ArrayList<Contacts> contacts;
-    private Context mContext;
+	private static LayoutInflater inflater = null;
+	private Activity activity;
+	private ArrayList<Contacts> contacts;
+	private Context mContext;
 
-    public ContactsAdapter(Activity activity , ArrayList<Contacts> contacts , Context mContext) {
-        super(mContext , R.layout.contacts_list , contacts);
-        this.activity = activity;
-        this.contacts = contacts;
-        this.mContext = mContext;
-    }
-    public class ViewHolder {
-        TextView name;
-        TextView number;
-    }
+	public ContactsAdapter(Activity activity, ArrayList<Contacts> contacts, Context mContext)
+	{
+		super(mContext, R.layout.contacts_list, contacts);
+		this.activity = activity;
+		this.contacts = contacts;
+		this.mContext = mContext;
+	}
 
-    @SuppressLint({"ViewHolder", "SetTextI18n", "InflateParams"})
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+	@SuppressLint({ "ViewHolder", "SetTextI18n", "InflateParams" })
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
 
-        Contacts C = getItem(position);
-        ViewHolder viewHolder ;
-        View vi ;
-        if(convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.contacts_list, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.number = (TextView) convertView.findViewById(R.id.number);
-            vi = convertView;
-            convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder) convertView.getTag();
-            vi=convertView;
-        }
+		Contacts C = getItem(position);
+		ViewHolder viewHolder;
+		View vi;
+		if (convertView == null)
+		{
+			viewHolder = new ViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			convertView = inflater.inflate(R.layout.contacts_list, parent, false);
+			viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+			viewHolder.number = (TextView) convertView.findViewById(R.id.number);
+			vi = convertView;
+			convertView.setTag(viewHolder);
+		}
+		else
+		{
+			viewHolder = (ViewHolder) convertView.getTag();
+			vi = convertView;
+		}
 
-        viewHolder.name.setText(C.name);
-        viewHolder.number.setText(C.number);
+		viewHolder.name.setText(C.name);
+		viewHolder.number.setText(C.number);
 
-        return vi;
-    }
+		return vi;
+	}
+
+	public class ViewHolder
+	{
+		TextView name;
+		TextView number;
+	}
 
 
 }

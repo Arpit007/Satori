@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:orientation="vertical">
+
     <com.dauntless.starkx.satori.ui.camera.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
@@ -10,7 +11,7 @@
         <com.dauntless.starkx.satori.ui.camera.GraphicOverlay
             android:id="@+id/faceOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </com.dauntless.starkx.satori.ui.camera.CameraSourcePreview>
 
@@ -18,8 +19,8 @@
         android:id="@+id/flipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/switch_cameras" />
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/switch_cameras"/>
 
 </RelativeLayout>
