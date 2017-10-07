@@ -42,7 +42,6 @@ public class Home extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         SocketConnection.getInstance().initialize(getSharedPreferences("Contacts", MODE_PRIVATE).getString("Number", ""));
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,7 +56,7 @@ public class Home extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.Logout){
-            SharedPreferences preferences=getSharedPreferences("Contacts", MODE_PRIVATE);
+            SharedPreferences preferences=getApplicationContext().getSharedPreferences("Contacts", MODE_PRIVATE);
             try
             {
                 JSONObject object = new JSONObject();
@@ -92,14 +91,14 @@ public class Home extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if(position == 1) {
-                return FragmentChat.newInstance();
-            }else if(position == 2) {
-                return FragmentContacts.newInstance();
-            }else {
-                return FragmentCamera.newInstance();
+            switch (position){
+                case 0:return FragmentCamera.newInstance();
+                case 1:return FragmentChat.newInstance();
+                case 2:return FragmentContacts.newInstance();
             }
+            return null;
         }
+
         @Override
         public int getCount() {
             return 3;
