@@ -13,7 +13,9 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.lib.FaceGraphic;
@@ -39,6 +42,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by sonu on 6/10/17.
  */
@@ -51,6 +56,9 @@ public class FragmentCamera extends Fragment {
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
     private boolean mIsFrontFacing = true;
+    private FloatingActionButton floatingActionButton;
+    private Integer REQUEST_CODE_FILETR = 10;
+
 
     public FragmentCamera() {
     }
@@ -66,6 +74,7 @@ public class FragmentCamera extends Fragment {
 
         mPreview = (CameraSourcePreview) rootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) rootView.findViewById(R.id.faceOverlay);
+        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
         if (savedInstanceState != null) {
             mIsFrontFacing = savedInstanceState.getBoolean("IsFrontFacing");
@@ -78,6 +87,12 @@ public class FragmentCamera extends Fragment {
     {
         super.onViewCreated(view, savedInstanceState);
 
+	    floatingActionButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    startActivityForResult(new Intent(getActivity(), FilterPicker.class) , REQUEST_CODE_FILETR);
+		    }
+	    });
 
         view.findViewById(R.id.flipButton).setOnClickListener(new View.OnClickListener()
         {
@@ -308,4 +323,12 @@ public class FragmentCamera extends Fragment {
             super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
         }
     };
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == REQUEST_CODE_FILETR) {
+            Bundle bundle = data.getExtras();
+            Toast.makeText(getActivity() , bundle.getString("mFilter"), Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 }
