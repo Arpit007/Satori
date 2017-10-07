@@ -24,7 +24,7 @@ public class Connection
 	static OkHttpClient client = new OkHttpClient();
 
 	public static String getUrl(){
-		if(TargetUrl.isEmpty())
+		if(!TargetUrl.isEmpty())
 			return TargetUrl;
 		return BaseUrl;
 	}
