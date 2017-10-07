@@ -5,24 +5,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.dauntless.starkx.satori.Model.Contacts;
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.etc.Connection;
 import com.dauntless.starkx.satori.etc.Connectivity;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Splash extends AppCompatActivity
 {
@@ -80,92 +86,68 @@ public class Splash extends AppCompatActivity
 		});
 	}
 
-	public static void UpdateContacts(final Context context)
+	public void UpdateContacts(final Context context)
 	{
-		try
+		new Thread(new Runnable()
 		{
-			JSONObject object = new JSONObject();
-			object.put("Number", context.getSharedPreferences("Contacts", MODE_PRIVATE).getString("Number", ""));
-
-			Connection.Post(Connection.getUrl() + "/user/getContacts", object, new Connection.ConnectionResponse()
+			@Override
+			public void run()
 			{
-				@Override
-				public void JsonResponse(JSONObject object, boolean Success)
+				try
 				{
-					if (!Success)
-					{
-						return;
+					JSONObject object = new JSONObject();
+					object.put("Number", context.getSharedPreferences("Contacts", MODE_PRIVATE).getString("Number", ""));
+					final Pair<Map<String, String>, Set<String>> pair = getContacts(Splash.this.getApplicationContext());
+					JSONArray array = new JSONArray();
+					for(String x : pair.second){
+						array.put(x);
 					}
-					try
+					object.put("Contacts", array);
+					Connection.Post(Connection.getUrl() + "/user/getContacts", object, new Connection.ConnectionResponse()
 					{
-						if (object.getJSONObject("head").getInt("code") != 200)
+						@Override
+						public void JsonResponse(JSONObject object, boolean Success)
 						{
-							return;
-						}
-						JSONArray contacts = object.getJSONObject("body").getJSONArray("contacts");
-						JSONArray jsonArray = new JSONArray();
-						JSONArray otherContracts = new JSONArray();
-						Map<String, Contacts> Contacts = readContacts(context);
-						for (int x = 0; x < contacts.length(); x++)
-						{
-							String num = contacts.getString(x);
-							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("Name", Contacts.get(num));
-							jsonObject.put("Number", num);
-							Contacts.remove(num);
-							jsonArray.put(jsonObject);
-						}
+							if (!Success)
+							{
+								return;
+							}
+							try
+							{
+								if (object.getJSONObject("head").getInt("code") != 200)
+								{
+									return;
+								}
+								JSONArray contacts = object.getJSONObject("body").getJSONArray("contacts");
+								JSONArray jsonArray = new JSONArray();
+								Map<String, String> Contacts = pair.first;
+								for (int x = 0; x < contacts.length(); x++)
+								{
+									String num = contacts.getString(x);
+									JSONObject jsonObject = new JSONObject();
+									jsonObject.put("Name", Contacts.get(num));
+									jsonObject.put("Number", num);
+									jsonArray.put(jsonObject);
+								}
 
-						for (String key : Contacts.keySet())
-						{
-							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("Name", Contacts.get(key));
-							jsonObject.put("Number", key);
-							otherContracts.put(jsonObject);
+								SharedPreferences.Editor editor = context.getSharedPreferences("Contacts", MODE_PRIVATE).edit();
+
+								editor.putString("Contacts", jsonArray.toString());
+								editor.apply();
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
+							}
 						}
-
-						SharedPreferences.Editor editor = context.getSharedPreferences("Contacts", MODE_PRIVATE).edit();
-
-						editor.putString("Contacts", jsonArray.toString());
-						editor.putString("Other", otherContracts.toString());
-						editor.apply();
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
+					});
 				}
-			});
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public static Map<String, Contacts> readContacts(Context context)
-	{
-		Map<String, Contacts> contactDetails = new HashMap<>();
-		SharedPreferences preferences=context.getSharedPreferences("Contacts", Context.MODE_PRIVATE);
-		try
-		{
-			JSONArray contacts = new JSONArray(preferences.getString("Contacts", "[]"));
-			for(int x=0;x<contacts.length();x++){
-				JSONObject object = contacts.getJSONObject(x);
-				Contacts contact = new Contacts(object.getString("Name"), object.getString("Number"));
-				contactDetails.put(contact.number, contact);
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
-			contacts = new JSONArray(preferences.getString("Other", "[]"));
-			for(int x=0;x<contacts.length();x++){
-				JSONObject object = contacts.getJSONObject(x);
-				Contacts contact = new Contacts(object.getString("Name"), object.getString("Number"));
-				contactDetails.put(contact.number, contact);
-			}
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-		return contactDetails;
+		}).start();
 	}
 
 	public void Init()
@@ -190,6 +172,33 @@ public class Splash extends AppCompatActivity
 				}
 			});
 		}
+	}
+
+	public synchronized Pair<Map<String, String>, Set<String>> getContacts(Context context)
+	{
+		Map<String, String> ContactsMap = new HashMap<>();
+		Set<String> NumbersList = new HashSet<>();
+		String name, number;
+		Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+
+		PhoneNumberUtil pnu = PhoneNumberUtil.getInstance();
+
+		while (cursor.moveToNext())
+		{
+			try
+			{
+				name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+				number = pnu.format(pnu.parse(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)), "IN"),
+						PhoneNumberUtil.PhoneNumberFormat.E164);
+				ContactsMap.put(number, name);
+				NumbersList.add(number);
+			}
+			catch (Exception e)
+			{
+			}
+		}
+		cursor.close();
+		return new Pair<>(ContactsMap, NumbersList);
 	}
 
 	@Override

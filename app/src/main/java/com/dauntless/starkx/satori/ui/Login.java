@@ -67,8 +67,7 @@ public class Login extends AppCompatActivity
 							getContacts();
 							JSONObject object = new JSONObject();
 							object.put("Number", "+91" + number.getText().toString());
-							object.put("newContacts", Numbers);
-							object.put("remContacts", new JSONArray());
+							object.put("Contacts", Numbers);
 
 							Connection.Post(Connection.getUrl() + "/user/login", object, new Connection.ConnectionResponse()
 							{
@@ -89,30 +88,19 @@ public class Login extends AppCompatActivity
 										}
 										JSONArray contacts = object.getJSONObject("body").getJSONArray("contacts");
 										JSONArray jsonArray = new JSONArray();
-										JSONArray otherContracts = new JSONArray();
 										for (int x = 0; x < contacts.length(); x++)
 										{
 											String num = contacts.getString(x);
 											JSONObject jsonObject = new JSONObject();
 											jsonObject.put("Name", Contacts.get(num));
 											jsonObject.put("Number", num);
-											Contacts.remove(num);
 											jsonArray.put(jsonObject);
-										}
-
-										for (String key : Contacts.keySet())
-										{
-											JSONObject jsonObject = new JSONObject();
-											jsonObject.put("Name", Contacts.get(key));
-											jsonObject.put("Number", key);
-											otherContracts.put(jsonObject);
 										}
 
 										SharedPreferences.Editor editor = getSharedPreferences("Contacts", MODE_PRIVATE).edit();
 
 										editor.putString("Contacts", jsonArray.toString());
 										editor.putString("Number", "+91" + number.getText().toString());
-										editor.putString("Other", otherContracts.toString());
 										editor.apply();
 										hideDialog("Success");
 
