@@ -35,6 +35,7 @@ public class SocketConnection
 		try
 		{
 			this.Number = Number;
+			Log.d("Socket", Connection.getUrl());
 			socket = IO.socket(Connection.getUrl());
 			socket.on(Socket.EVENT_CONNECT, new Emitter.Listener()
 			{
@@ -58,6 +59,8 @@ public class SocketConnection
 				public void call(Object... args)
 				{
 					Log.d("Socket", "Disconnected");
+					if(Connectivity.isOnline())
+						reconnect();
 				}
 
 			});

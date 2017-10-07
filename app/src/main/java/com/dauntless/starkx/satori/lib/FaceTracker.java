@@ -45,7 +45,7 @@ public class FaceTracker extends Tracker<Face>
 {
 
 	private static final String TAG = "FaceTracker";
-
+	private FaceGraphic.Renderer renderer;
 	private GraphicOverlay mOverlay;
 	private FaceGraphic mFaceGraphic;
 	private Context mContext;
@@ -64,10 +64,11 @@ public class FaceTracker extends Tracker<Face>
 	private boolean mPreviousIsRightEyeOpen = true;
 
 
-	public FaceTracker(GraphicOverlay overlay, Context context, boolean isFrontFacing)
+	public FaceTracker(GraphicOverlay overlay, Context context, boolean isFrontFacing, FaceGraphic.Renderer renderer)
 	{
 		mOverlay = overlay;
 		mContext = context;
+		this.renderer = renderer;
 		mIsFrontFacing = isFrontFacing;
 		mFaceData = new FaceData();
 	}
@@ -82,7 +83,7 @@ public class FaceTracker extends Tracker<Face>
 	@Override
 	public void onNewItem(int id, Face face)
 	{
-		mFaceGraphic = new FaceGraphic(mOverlay, mContext, mIsFrontFacing);
+		mFaceGraphic = new FaceGraphic(mOverlay, mIsFrontFacing, renderer);
 	}
 
 	/**
@@ -208,4 +209,9 @@ public class FaceTracker extends Tracker<Face>
 		}
 	}
 
+	public void setRenderer(FaceGraphic.Renderer renderer)
+	{
+		this.renderer = renderer;
+		mFaceGraphic.setRenderer(renderer);
+	}
 }

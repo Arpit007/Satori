@@ -11,8 +11,12 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.dauntless.starkx.satori.R;
+import com.dauntless.starkx.satori.lib.FaceGraphic;
 import com.dauntless.starkx.satori.lib.FaceTracker;
 import com.dauntless.starkx.satori.ui.camera.CameraSourcePreview;
 import com.dauntless.starkx.satori.ui.camera.GraphicOverlay;
@@ -40,18 +45,13 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.IOException;
 import java.net.URL;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * Created by sonu on 6/10/17.
  */
 
 public class FragmentCamera extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String TAG = "FaceActivity";
     private static final int RC_HANDLE_GMS = 9001;
-    // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 255;
     private CameraSource mCameraSource = null;
     private CameraSourcePreview mPreview;
@@ -60,9 +60,9 @@ public class FragmentCamera extends Fragment {
     private FloatingActionButton floatingActionButton;
     private Integer REQUEST_CODE_FILETR = 10;
 
+
     public FragmentCamera() {
     }
-
 
     public static FragmentCamera newInstance() {
         FragmentCamera fragment = new FragmentCamera();
@@ -70,57 +70,54 @@ public class FragmentCamera extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
-//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
         mPreview = (CameraSourcePreview) rootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) rootView.findViewById(R.id.faceOverlay);
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
-        final ImageButton button = (ImageButton) rootView.findViewById(R.id.flipButton);
-        button.setOnClickListener(mSwitchCameraButtonListener);
-
         if (savedInstanceState != null) {
             mIsFrontFacing = savedInstanceState.getBoolean("IsFrontFacing");
         }
+        return rootView;
+    }
 
-        // Start using the camera if permission has been granted to this app,
-        // otherwise ask for permission to use it.
-        int rc = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+	    floatingActionButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    startActivityForResult(new Intent(getActivity(), FilterPicker.class) , REQUEST_CODE_FILETR);
+		    }
+	    });
+
+        view.findViewById(R.id.flipButton).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                mIsFrontFacing = !mIsFrontFacing;
+
+                if (mCameraSource != null) {
+                    mCameraSource.release();
+                    mCameraSource = null;
+                }
+
+                createCameraSource();
+                startCameraSource();
+            }
+        });
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
         } else {
             requestCameraPermission();
         }
-
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), FilterPicker.class) , REQUEST_CODE_FILETR);
-            }
-        });
-
-
-        return rootView;
     }
-
-
-    private View.OnClickListener mSwitchCameraButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            mIsFrontFacing = !mIsFrontFacing;
-
-            if (mCameraSource != null) {
-                mCameraSource.release();
-                mCameraSource = null;
-            }
-
-            createCameraSource();
-            startCameraSource();
-        }
-    };
 
     @Override
     public void onResume() {
@@ -133,7 +130,6 @@ public class FragmentCamera extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
         mPreview.stop();
     }
 
@@ -151,9 +147,6 @@ public class FragmentCamera extends Fragment {
             mCameraSource.release();
         }
     }
-
-    // Handle camera permission requests
-    // =================================
 
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission not acquired. Requesting permission.");
@@ -179,8 +172,7 @@ public class FragmentCamera extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
             Log.d(TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -194,8 +186,6 @@ public class FragmentCamera extends Fragment {
             return;
         }
 
-        // If we've reached this part of the method, it means that the user hasn't granted the app
-        // access to the camera. Notify the user and exit.
         Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -209,9 +199,6 @@ public class FragmentCamera extends Fragment {
                 .setPositiveButton(R.string.disappointed_ok, listener)
                 .show();
     }
-
-    // Camera source
-    // =============
 
     private void createCameraSource() {
         Log.d(TAG, "createCameraSource called.");
@@ -262,12 +249,6 @@ public class FragmentCamera extends Fragment {
         }
     }
 
-    // Face detector
-    // =============
-
-    /**
-     *  Create the face detector, and check if it's ready for use.
-     */
     @NonNull
     private FaceDetector createFaceDetector(final Context context) {
         Log.d(TAG, "createFaceDetector called.");
@@ -284,7 +265,7 @@ public class FragmentCamera extends Fragment {
         MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
             @Override
             public Tracker<Face> create(Face face) {
-                return new FaceTracker(mGraphicOverlay, context, mIsFrontFacing);
+                return new FaceTracker(mGraphicOverlay, context, mIsFrontFacing, renderer);
             }
         };
 
@@ -317,6 +298,33 @@ public class FragmentCamera extends Fragment {
         return detector;
     }
 
+    private FaceGraphic.Renderer renderer = new FaceGraphic.Renderer()
+    {
+        @Override
+        public void drawEye(Canvas canvas, PointF eyePosition, float eyeRadius, PointF irisPosition, float irisRadius, boolean eyeOpen, boolean smiling)
+        {
+            super.drawEye(canvas, eyePosition, eyeRadius, irisPosition, irisRadius, eyeOpen, smiling);
+        }
+
+        @Override
+        public void drawNose(Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth)
+        {
+            super.drawNose(canvas, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth);
+        }
+
+        @Override
+        public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition)
+        {
+            super.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
+        }
+
+        @Override
+        public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition)
+        {
+            super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
+        }
+    };
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == REQUEST_CODE_FILETR) {
             Bundle bundle = data.getExtras();
@@ -332,7 +340,5 @@ public class FragmentCamera extends Fragment {
 
 
         }
-
     }
-
 }
