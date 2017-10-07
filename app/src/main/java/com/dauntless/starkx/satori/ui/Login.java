@@ -67,7 +67,7 @@ public class Login extends AppCompatActivity
 						{
 							getContacts();
 							JSONObject object = new JSONObject();
-							object.put("Number", number.getText().toString());
+							object.put("Number", "+91" + number.getText().toString());
 							object.put("newContacts", Numbers);
 							object.put("remContacts", new JSONArray());
 
