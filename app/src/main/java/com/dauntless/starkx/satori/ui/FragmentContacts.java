@@ -69,10 +69,9 @@ public class FragmentContacts extends Fragment {
 
     public void getContacts(){
         SharedPreferences preferences=getActivity().getSharedPreferences("Contacts", Context.MODE_PRIVATE);
-        try
-        {
+        try {
             JSONArray contacts = new JSONArray(preferences.getString("Contacts", "[]"));
-            for(int x=0;x<contacts.length();x++){
+            for(int x = 0; x < contacts.length(); x ++){
                 JSONObject object = contacts.getJSONObject(x);
                 Contacts contact = new Contacts(object.getString("Name"), object.getString("Number"));
                 contactDetails.add(contact);

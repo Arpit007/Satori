@@ -53,8 +53,7 @@ public class ContactsAdapter extends ArrayAdapter<Contacts>
 			vi = convertView;
 			convertView.setTag(viewHolder);
 		}
-		else
-		{
+		else {
 			viewHolder = (ViewHolder) convertView.getTag();
 			vi = convertView;
 		}

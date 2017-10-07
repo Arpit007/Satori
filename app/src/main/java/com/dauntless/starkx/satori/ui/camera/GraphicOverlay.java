@@ -17,6 +17,7 @@
 package com.dauntless.starkx.satori.ui.camera;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
@@ -46,6 +47,8 @@ import java.util.Set;
  */
 public class GraphicOverlay extends View
 {
+
+	public Bitmap bitmap1;
 
 	private static final String TAG = "GraphicOverlay";
 
@@ -141,15 +144,14 @@ public class GraphicOverlay extends View
 	 * this and implement the {@link Graphic#draw(Canvas)} method to define the
 	 * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
 	 */
-	public static abstract class Graphic
-	{
-
+	public static abstract class Graphic {
+		public Bitmap bitmap;
 		private GraphicOverlay mOverlay;
 
-		public Graphic(GraphicOverlay overlay)
-		{
+		public Graphic(GraphicOverlay overlay) {
 			mOverlay = overlay;
 		}
+
 
 		/**
 		 * Draw the graphic on the supplied canvas.  Drawing should use the following methods to

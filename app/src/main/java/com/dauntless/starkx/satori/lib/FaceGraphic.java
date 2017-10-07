@@ -31,17 +31,18 @@ package com.dauntless.starkx.satori.lib;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.ui.camera.GraphicOverlay;
 
 
-class FaceGraphic extends GraphicOverlay.Graphic
-{
+class FaceGraphic extends GraphicOverlay.Graphic {
 
 	private static final String TAG = "FaceGraphic";
 
@@ -73,8 +74,7 @@ class FaceGraphic extends GraphicOverlay.Graphic
 	private EyePhysics mRightPhysics = new EyePhysics();
 
 
-	FaceGraphic(GraphicOverlay overlay, Context context, boolean isFrontFacing)
-	{
+	FaceGraphic(GraphicOverlay overlay, Context context, boolean isFrontFacing) {
 		super(overlay);
 		mIsFrontFacing = isFrontFacing;
 		Resources resources = context.getResources();
@@ -82,16 +82,14 @@ class FaceGraphic extends GraphicOverlay.Graphic
 		initializeGraphics(resources);
 	}
 
-	private void initializeGraphics(Resources resources)
-	{
+	private void initializeGraphics(Resources resources) {
 		mPigNoseGraphic = resources.getDrawable(R.drawable.pig_nose_emoji);
 		mMustacheGraphic = resources.getDrawable(R.drawable.mustache);
 		mHappyStarGraphic = resources.getDrawable(R.drawable.happy_star);
 		mHatGraphic = resources.getDrawable(R.drawable.red_hat);
 	}
 
-	private void initializePaints(Resources resources)
-	{
+	private void initializePaints(Resources resources) {
 		mHintTextPaint = new Paint();
 		mHintTextPaint.setColor(resources.getColor(R.color.overlayHint));
 		mHintTextPaint.setTextSize(resources.getDimension(R.dimen.textSize));
@@ -122,20 +120,17 @@ class FaceGraphic extends GraphicOverlay.Graphic
 	/**
 	 * Update the face instance based on detection from the most recent frame.
 	 */
-	void update(FaceData faceData)
-	{
+	void update(FaceData faceData) {
 		mFaceData = faceData;
 		postInvalidate(); // Trigger a redraw of the graphic (i.e. cause draw() to be called).
 	}
 
 	@Override
-	public void draw(Canvas canvas)
-	{
+	public void draw(Canvas canvas) {
 		// Confirm that the face data is still available
 		// before using it.
 		FaceData faceData = mFaceData;
-		if (faceData == null)
-		{
+		if (faceData == null) {
 			return;
 		}
 		PointF detectPosition = faceData.getPosition();

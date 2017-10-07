@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +38,7 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
+import java.net.URL;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -317,7 +320,17 @@ public class FragmentCamera extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == REQUEST_CODE_FILETR) {
             Bundle bundle = data.getExtras();
-            Toast.makeText(getActivity() , bundle.getString("mFilter"), Toast.LENGTH_LONG).show();
+
+            try {
+                URL url = new URL(bundle.getString("mFilter"));
+                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                Toast.makeText(getActivity() , image.toString(), Toast.LENGTH_LONG).show();
+            } catch(IOException e) {
+                System.out.println(e);
+            }
+
+
         }
 
     }
