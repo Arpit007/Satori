@@ -27,7 +27,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dauntless.starkx.satori;
+package com.dauntless.starkx.satori.lib;
 
 import android.graphics.PointF;
 

@@ -27,7 +27,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.dauntless.starkx.satori;
+package com.dauntless.starkx.satori.lib;
 
 import android.content.Context;
 import android.graphics.PointF;
@@ -41,7 +41,7 @@ import com.google.android.gms.vision.face.Landmark;
 import java.util.HashMap;
 import java.util.Map;
 
-class FaceTracker extends Tracker<Face>
+public class FaceTracker extends Tracker<Face>
 {
 
 	private static final String TAG = "FaceTracker";
@@ -64,7 +64,7 @@ class FaceTracker extends Tracker<Face>
 	private boolean mPreviousIsRightEyeOpen = true;
 
 
-	FaceTracker(GraphicOverlay overlay, Context context, boolean isFrontFacing)
+	public FaceTracker(GraphicOverlay overlay, Context context, boolean isFrontFacing)
 	{
 		mOverlay = overlay;
 		mContext = context;

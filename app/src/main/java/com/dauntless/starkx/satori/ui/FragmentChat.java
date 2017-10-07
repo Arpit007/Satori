@@ -1,10 +1,12 @@
-package com.dauntless.starkx.satori;
+package com.dauntless.starkx.satori.ui;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.dauntless.starkx.satori.R;
 
 /**
  * Created by sonu on 6/10/17.

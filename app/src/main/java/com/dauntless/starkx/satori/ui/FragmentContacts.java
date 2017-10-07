@@ -1,11 +1,10 @@
-package com.dauntless.starkx.satori;
+package com.dauntless.starkx.satori.ui;
 
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.ListView;
 
 import com.dauntless.starkx.satori.Adapter.ContactsAdapter;
 import com.dauntless.starkx.satori.Model.Contacts;
+import com.dauntless.starkx.satori.R;
 
 import java.util.ArrayList;
 

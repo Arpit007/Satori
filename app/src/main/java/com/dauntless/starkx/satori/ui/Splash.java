@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import com.dauntless.starkx.satori.Home;
 import com.dauntless.starkx.satori.R;
 
 public class Splash extends AppCompatActivity

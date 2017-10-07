@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dauntless.starkx.satori.Home;
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.etc.Connection;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;

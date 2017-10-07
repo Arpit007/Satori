@@ -1,4 +1,4 @@
-package com.dauntless.starkx.satori;
+package com.dauntless.starkx.satori.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.dauntless.starkx.satori.R;
+import com.dauntless.starkx.satori.lib.FaceTracker;
 import com.dauntless.starkx.satori.ui.camera.CameraSourcePreview;
 import com.dauntless.starkx.satori.ui.camera.GraphicOverlay;
 import com.google.android.gms.common.ConnectionResult;
