@@ -1,8 +1,11 @@
 package com.dauntless.starkx.satori.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +17,9 @@ import android.widget.ListView;
 import com.dauntless.starkx.satori.Adapter.ContactsAdapter;
 import com.dauntless.starkx.satori.Model.Contacts;
 import com.dauntless.starkx.satori.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -29,15 +35,26 @@ public class FragmentContacts extends Fragment {
 
     public FragmentContacts() {
     }
+
     public static FragmentContacts newInstance() {
         FragmentContacts fragment = new FragmentContacts();
         return fragment;
     }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactList = (ListView) rootView.findViewById(R.id.contactsList);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
         contactDetails = new ArrayList<>();
+
         getContacts();
+
         contactsAdapter = new ContactsAdapter( getActivity() , contactDetails , getContext());
         contactList.setAdapter(contactsAdapter);
         contactList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -48,17 +65,21 @@ public class FragmentContacts extends Fragment {
                         .setAction("No action", null).show();
             }
         });
-        return rootView;
     }
+
     public void getContacts(){
-        Cursor cursor = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        String name , number;
-        assert cursor != null;
-        while (cursor.moveToNext()) {
-            name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contactDetails.add(new Contacts(name ,number));
+        SharedPreferences preferences=getActivity().getSharedPreferences("Contacts", Context.MODE_PRIVATE);
+        try
+        {
+            JSONArray contacts = new JSONArray(preferences.getString("Contacts", "[]"));
+            for(int x=0;x<contacts.length();x++){
+                JSONObject object = contacts.getJSONObject(x);
+                Contacts contact = new Contacts(object.getString("Name"), object.getString("Number"));
+                contactDetails.add(contact);
+            }
         }
-        cursor.close();
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

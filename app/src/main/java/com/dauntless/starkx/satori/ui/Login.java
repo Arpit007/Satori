@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity
 							object.put("newContacts", Numbers);
 							object.put("remContacts", new JSONArray());
 
-							Connection.Post(Connection.BaseUrl + "/user/login", object, new Connection.ConnectionResponse()
+							Connection.Post(Connection.getUrl() + "/user/login", object, new Connection.ConnectionResponse()
 							{
 								@Override
 								public void JsonResponse(JSONObject object, boolean Success)
@@ -111,7 +111,7 @@ public class Login extends AppCompatActivity
 										SharedPreferences.Editor editor = getSharedPreferences("Contacts", MODE_PRIVATE).edit();
 
 										editor.putString("Contacts", jsonArray.toString());
-										editor.putString("Number", number.getText().toString());
+										editor.putString("Number", "+91" + number.getText().toString());
 										editor.putString("Other", otherContracts.toString());
 										editor.apply();
 										hideDialog("Success");
