@@ -323,12 +323,11 @@ public class FragmentCamera extends Fragment {
             super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
         }
     };
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == REQUEST_CODE_FILETR) {
             Bundle bundle = data.getExtras();
             Toast.makeText(getActivity() , bundle.getString("mFilter"), Toast.LENGTH_LONG).show();
         }
-
     }
-
 }
