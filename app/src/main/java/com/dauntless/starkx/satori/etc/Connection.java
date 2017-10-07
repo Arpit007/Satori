@@ -1,5 +1,7 @@
 package com.dauntless.starkx.satori.etc;
 
+import android.os.Looper;
+
 import org.json.JSONObject;
 
 import java.util.Iterator;
@@ -17,8 +19,15 @@ import okhttp3.Response;
 public class Connection
 {
 	public static final String BaseUrl = "https://stark-wallet.herokuapp.com/natal";
+	public static String TargetUrl = "";
 	static final MediaType jsonType = MediaType.parse("application/json; charset=utf-8");
 	static OkHttpClient client = new OkHttpClient();
+
+	public static String getUrl(){
+		if(TargetUrl.isEmpty())
+			return TargetUrl;
+		return BaseUrl;
+	}
 
 	public static void Post(final String url, final JSONObject object, final ConnectionResponse connectionResponse)
 	{
@@ -46,7 +55,7 @@ public class Connection
 		}.start();
 	}
 
-	public static void Get(final String url, final JSONObject object, final ConnectionResponse connectionResponse)
+	public static void Get(final String url, final JSONObject object, final boolean isJsonResponse, final ConnectionResponse connectionResponse)
 	{
 		new Thread()
 		{
@@ -78,19 +87,24 @@ public class Connection
 							.build();
 
 					Response response = client.newCall(request).execute();
-					connectionResponse.JsonResponse(new JSONObject(response.body().string()), true);
+					if(isJsonResponse)
+						connectionResponse.JsonResponse(new JSONObject(response.body().string()), true);
+					else connectionResponse.StringResponse(response.body().string(), true);
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					connectionResponse.JsonResponse(null, false);
+					if(isJsonResponse)
+						connectionResponse.JsonResponse(null, false);
+					else connectionResponse.StringResponse(null, false);
 				}
 			}
 		}.start();
 	}
 
-	public static interface ConnectionResponse
+	public static abstract class ConnectionResponse
 	{
-		void JsonResponse(JSONObject object, boolean Success);
+		public void JsonResponse(JSONObject object, boolean Success){}
+		public void StringResponse(String object, boolean Success){}
 	}
 }

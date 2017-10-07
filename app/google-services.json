@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "56954369645",
+    "firebase_url": "https://satori-a59e4.firebaseio.com",
+    "project_id": "satori-a59e4",
+    "storage_bucket": "satori-a59e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56954369645:android:9f5705ea86740923",
+        "android_client_info": {
+          "package_name": "com.dauntless.starkx.satori"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56954369645-u3be6hghu97jhg1c4eckh0dhnh6iu86h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dauntless.starkx.satori",
+            "certificate_hash": "613256824ac6a06d0744e9f2f22e8d8121914703"
+          }
+        },
+        {
+          "client_id": "56954369645-qevmv2abpenrqbfppkql37eduiqhkk39.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdmfdVfX4p8O1uHFvxATW6qUMhYiRVXCs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56954369645-qevmv2abpenrqbfppkql37eduiqhkk39.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

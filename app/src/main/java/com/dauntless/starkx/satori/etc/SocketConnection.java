@@ -30,12 +30,12 @@ public class SocketConnection
 		return socketConnection;
 	}
 
-	public void initialize(final String  Number)
+	public void initialize(final String Number)
 	{
 		try
 		{
 			this.Number = Number;
-			socket = IO.socket(Connection.BaseUrl);
+			socket = IO.socket(Connection.getUrl());
 			socket.on(Socket.EVENT_CONNECT, new Emitter.Listener()
 			{
 				@Override
@@ -71,6 +71,9 @@ public class SocketConnection
 
 	public void reconnect()
 	{
+		if(Number.isEmpty())
+			return;
+
 		if (socket == null)
 		{
 			initialize(Number);
