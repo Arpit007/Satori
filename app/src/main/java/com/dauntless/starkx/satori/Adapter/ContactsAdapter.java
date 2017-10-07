@@ -3,6 +3,7 @@ package com.dauntless.starkx.satori.Adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,9 @@ public class ContactsAdapter extends ArrayAdapter<Contacts>
 		this.mContext = mContext;
 	}
 
-	@SuppressLint({ "ViewHolder", "SetTextI18n", "InflateParams" })
+	@NonNull
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
+	public View getView(int position, View convertView, @NonNull ViewGroup parent)
 	{
 
 		Contacts C = getItem(position);
