@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.lib.FaceTracker;
@@ -35,6 +37,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.IOException;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by sonu on 6/10/17.
  */
@@ -50,7 +54,8 @@ public class FragmentCamera extends Fragment {
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
     private boolean mIsFrontFacing = true;
-
+    private FloatingActionButton floatingActionButton;
+    private Integer REQUEST_CODE_FILETR = 10;
 
     public FragmentCamera() {
     }
@@ -69,6 +74,8 @@ public class FragmentCamera extends Fragment {
 //            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         mPreview = (CameraSourcePreview) rootView.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) rootView.findViewById(R.id.faceOverlay);
+        floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
         final ImageButton button = (ImageButton) rootView.findViewById(R.id.flipButton);
         button.setOnClickListener(mSwitchCameraButtonListener);
 
@@ -84,6 +91,16 @@ public class FragmentCamera extends Fragment {
         } else {
             requestCameraPermission();
         }
+
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getActivity(), FilterPicker.class) , REQUEST_CODE_FILETR);
+            }
+        });
+
+
         return rootView;
     }
 
@@ -295,6 +312,14 @@ public class FragmentCamera extends Fragment {
             }
         }
         return detector;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == REQUEST_CODE_FILETR) {
+            Bundle bundle = data.getExtras();
+            Toast.makeText(getActivity() , bundle.getString("mFilter"), Toast.LENGTH_LONG).show();
+        }
+
     }
 
 }
