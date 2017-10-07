@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null">
+
+    <ListView
+        android:id="@+id/chat_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:layout_marginBottom="4dp"
+        android:clipToPadding="false"
+        android:divider="@drawable/chat_divider"
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_above="@+id/bottomlayout"
+        android:stackFromBottom="false"
+        android:transcriptMode="normal"/>
+
+    <LinearLayout
+        android:id="@+id/bottomlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="50dp"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:paddingBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="20dp"
+            android:background="@drawable/input">
+
+            <ImageView
+                android:id="@+id/emojiButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/input_emoji"/>
+
+            <EditText
+                android:id="@+id/chat_edit_text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="12dp"
+                android:hint="@string/type_your_message"
+                android:singleLine="false"
+                android:inputType="textMultiLine"
+                android:textSize="18sp"
+                android:textColorHint="#c4c0bd"
+                android:background="@null"/>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/enter_chat1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/input_circle_normal"
+            android:src="@drawable/input_send"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
