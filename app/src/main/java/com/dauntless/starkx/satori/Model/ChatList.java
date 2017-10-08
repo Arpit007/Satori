@@ -1,10 +1,12 @@
 package com.dauntless.starkx.satori.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by sonu on 7/10/17.
  */
 
-public class ChatList {
+public class ChatList implements Serializable {
     public String chatUrl = "";
     public String receiverName = "";
     public String receiverNumber = "";

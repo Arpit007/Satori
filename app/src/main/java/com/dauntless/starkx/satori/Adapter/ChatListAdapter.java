@@ -1,6 +1,5 @@
 package com.dauntless.starkx.satori.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dauntless.starkx.satori.Model.ChatList;
-import com.dauntless.starkx.satori.Model.Contacts;
 import com.dauntless.starkx.satori.R;
 import com.squareup.picasso.Picasso;
 
@@ -21,54 +19,47 @@ import java.util.ArrayList;
  * Created by sonu on 7/10/17.
  */
 
-public class ChatListAdapter  extends ArrayAdapter<ChatList> {
+public class ChatListAdapter extends ArrayAdapter<ChatList> {
+	ArrayList<ChatList> chatList;
 
-    private Activity mActivity;
-    private ArrayList<ChatList> chatList;
-    private Context mContext;
+	public ChatListAdapter(ArrayList<ChatList> chatList, Context mContext) {
+		super(mContext, R.layout.chat_list, chatList);
+		this.chatList = chatList;
+	}
 
-    public ChatListAdapter(Activity activity, ArrayList<ChatList> chatList, Context mContext) {
-        super(mContext, R.layout.chat_list, chatList);
-        this.mActivity = activity;
-        this.chatList = chatList;
-        this.mContext = mContext;
-    }
+	@NonNull
+	@Override
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+		if (convertView == null) {
+			LayoutInflater inflater = LayoutInflater.from(getContext());
+			convertView = inflater.inflate(R.layout.chat_list, parent, false);
+		}
 
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+		ChatList chatItem = getItem(position);
+		ViewHolder viewHolder = new ViewHolder(convertView);
 
-        ChatList C = getItem(position);
-        ViewHolder viewHolder;
-        View vi;
+		viewHolder.receiverName.setText(chatItem.receiverName);
+		viewHolder.receiverNumber.setText(chatItem.receiverNumber);
 
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(R.layout.chat_list, parent, false);
-            viewHolder.receiverName = (TextView) convertView.findViewById(R.id.cotactName);
-            viewHolder.receiverNumber = (TextView) convertView.findViewById(R.id.cotactNumber);
-            viewHolder.receiverImage = (ImageView) convertView.findViewById(R.id.userImage);
-            vi = convertView;
-            convertView.setTag(viewHolder);
-        }
-        else {
-            viewHolder = (ViewHolder) convertView.getTag();
-            vi = convertView;
-        }
-        viewHolder.receiverName.setText(C.receiverName);
-        viewHolder.receiverNumber.setText(C.receiverNumber);
-        Picasso.with(mContext)
-                .load(C.chatUrl)
-                .fit().centerInside()
-                .placeholder(R.drawable.loading_fail)
-                .error(R.drawable.loading_fail)
-                .into(viewHolder.receiverImage);
-        return vi;
-    }
-    public class ViewHolder {
-        ImageView receiverImage;
-        TextView receiverName;
-        TextView receiverNumber;
-    }
+		Picasso.with(getContext())
+				.load(chatItem.chatUrl)
+				.fit().centerInside()
+				.placeholder(R.drawable.loading_fail)
+				.error(R.drawable.loading_fail)
+				.into(viewHolder.receiverImage);
+
+		return convertView;
+	}
+
+	public class ViewHolder {
+		ImageView receiverImage;
+		TextView receiverName;
+		TextView receiverNumber;
+
+		ViewHolder(View view) {
+			receiverName = (TextView) view.findViewById(R.id.name);
+			receiverNumber = (TextView) view.findViewById(R.id.number);
+			receiverImage = (ImageView) view.findViewById(R.id.userImage);
+		}
+	}
 }
