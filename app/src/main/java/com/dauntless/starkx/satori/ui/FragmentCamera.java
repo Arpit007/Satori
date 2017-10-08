@@ -337,10 +337,10 @@ public class FragmentCamera extends Fragment {
         public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition) {
             super.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
 
-            int left = (int)mouthLeftPosition.x + 1;
-            int top = (int)noseBasePosition.y;
-            int right = (int)mouthRightPosition.x + 1;
-            int bottom = (int)Math.min(mouthLeftPosition.y, mouthRightPosition.y);
+            int left = (int)mouthLeftPosition.x - 100;
+            int top = (int)noseBasePosition.y+4;
+            int right = (int)mouthRightPosition.x + 100;
+            int bottom = (int)Math.min(mouthLeftPosition.y, mouthRightPosition.y) +4 ;
             Drawable mMustacheGraphic = new BitmapDrawable(getResources(), mustacheBitmap);
             if (mIsFrontFacing) {
                 mMustacheGraphic.setBounds(left, top, right, bottom);

@@ -112,7 +112,7 @@ public class FilterPicker extends AppCompatActivity {
                         }
                         JSONArray mustaches = object.getJSONObject("body").getJSONObject("res").getJSONArray("moustache");
                         for (int x = 0; x < mustaches.length(); x++) {
-                            mustacheUrls.add(Connection.getUrl() + hats.getString(x));
+                            mustacheUrls.add(Connection.getUrl() + mustaches.getString(x));
                         }
                         FilterPicker.this.runOnUiThread(new Runnable() {
                             @Override
