@@ -28,6 +28,7 @@ import static com.dauntless.starkx.satori.ui.FragmentCamera.RESULT_CODE_EYE;
 import static com.dauntless.starkx.satori.ui.FragmentCamera.RESULT_CODE_HEAD;
 import static com.dauntless.starkx.satori.ui.FragmentCamera.RESULT_CODE_MUSTACHE;
 import static com.dauntless.starkx.satori.ui.FragmentCamera.RESULT_CODE_NOSE;
+import static com.dauntless.starkx.satori.ui.FragmentCamera.RESULT_CODE_NOSE_FACE;
 
 public class FilterPicker extends AppCompatActivity implements MessagePasser {
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -38,7 +39,7 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 	private ArrayList<String> eyeUrls;
 	private ArrayList<String> mustacheUrls;
 	private ArrayList<String> headUrls;
-	private ArrayList<String> mouthUrls;
+	private ArrayList<String> faceUrls;
 
 
 	@Override
@@ -52,7 +53,7 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 		noseUrls = new ArrayList<>();
 		eyeUrls = new ArrayList<>();
 		mustacheUrls = new ArrayList<>();
-		mouthUrls = new ArrayList<>();
+        faceUrls = new ArrayList<>();
 		headUrls = new ArrayList<>();
 
 		getAllImages();
@@ -124,6 +125,10 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 		for (int x = 0; x < mustaches.length(); x++) {
 			mustacheUrls.add(Connection.getUrl() + mustaches.getString(x));
 		}
+        JSONArray faces = object.getJSONObject("body").getJSONObject("res").getJSONArray("face");
+        for (int x = 0; x < faces.length(); x++) {
+            faceUrls.add(Connection.getUrl() + faces.getString(x));
+        }
 		FilterPicker.this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -146,6 +151,8 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 					return FragmentFilterPicker.newInstance(noseUrls, RESULT_CODE_NOSE, FilterPicker.this);
 				case 2:
 					return FragmentFilterPicker.newInstance(headUrls, RESULT_CODE_HEAD, FilterPicker.this);
+				case 3:
+					return FragmentFilterPicker.newInstance(faceUrls, RESULT_CODE_NOSE_FACE, FilterPicker.this);
 				case 4:
 					return FragmentFilterPicker.newInstance(mustacheUrls, RESULT_CODE_MUSTACHE, FilterPicker.this);
 			}
@@ -168,7 +175,7 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 				case 2:
 					return "HEAD";
 				case 3:
-					return "MOUTH";
+					return "FACE";
 				case 4:
 					return "MUSTACHE";
 			}

@@ -62,7 +62,8 @@ public class FragmentCamera extends Fragment {
 	public static final int RESULT_CODE_NOSE = 11;
 	public static final int RESULT_CODE_MUSTACHE = 12;
 	public static final int RESULT_CODE_HEAD = 13;
-	private Bitmap eyeBitmap, noseBitmap, mustacheBitmap, headBitmap;
+	public static final int RESULT_CODE_NOSE_FACE = 14;
+	private Bitmap eyeBitmap, noseBitmap, mustacheBitmap, headBitmap  , noseFaceBitmap;
 
 
 	public FragmentCamera() {
@@ -305,6 +306,13 @@ public class FragmentCamera extends Fragment {
 		@Override
 		public void drawEye(Canvas canvas, PointF eyePosition, float eyeRadius, PointF irisPosition, float irisRadius, boolean eyeOpen, boolean smiling) {
 			super.drawEye(canvas, eyePosition, eyeRadius, irisPosition, irisRadius, eyeOpen, smiling);
+			Drawable mHappyStarGraphic = new BitmapDrawable(getResources(), eyeBitmap);
+            mHappyStarGraphic.setBounds(
+                (int)(irisPosition.x - irisRadius),
+                (int)(irisPosition.y - irisRadius),
+                (int)(irisPosition.x + irisRadius),
+                (int)(irisPosition.y + irisRadius));
+            mHappyStarGraphic.draw(canvas);
 		}
 
 		@Override
@@ -312,8 +320,6 @@ public class FragmentCamera extends Fragment {
 			super.drawNose(canvas, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth);
 
 			final float NOSE_FACE_WIDTH_RATIO = (float) ( 1 / 5.0 );
-//            final float NOSE_FACE_WIDTH_RATIO = (float)(1 );
-
 			float noseWidth = faceWidth * NOSE_FACE_WIDTH_RATIO;
 			int left = (int) ( noseBasePosition.x - ( noseWidth / 2 ) );
 			int right = (int) ( noseBasePosition.x + ( noseWidth / 2 ) );
@@ -323,14 +329,28 @@ public class FragmentCamera extends Fragment {
 			mPigNoseGraphic.setBounds(left, top, right, bottom);
 			mPigNoseGraphic.draw(canvas);
 		}
+        @Override
+        public void drawNoseFace (Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth , float faceHeight) {
+            super.drawNoseFace(canvas, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth  , faceHeight);
+            final float NOSE_FACE_WIDTH_RATIO = (float)(1 );
+            float noseWidth = faceWidth * NOSE_FACE_WIDTH_RATIO;
+            int left = (int) ( noseBasePosition.x - ( noseWidth / 2 ) );
+            int right = (int) ( noseBasePosition.x + ( noseWidth / 2 ) );
+            int top = (int) ( leftEyePosition.y + rightEyePosition.y ) /2;
+//            int top = (int) ( *faceHeight) ;
+            int bottom = (int) noseBasePosition.y;
+            Drawable mPigNoseGraphic = new BitmapDrawable(getResources(), noseFaceBitmap);
+            mPigNoseGraphic.setBounds(left, top, right, bottom);
+            mPigNoseGraphic.draw(canvas);
+        }
 
 		@Override
 		public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition) {
 			super.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
 
-			int left = (int) mouthLeftPosition.x + 1;
-			int top = (int) noseBasePosition.y;
-			int right = (int) mouthRightPosition.x + 1;
+			int left = (int) mouthLeftPosition.x-50 ;
+			int top = (int) noseBasePosition.y + 10;
+			int right = (int) mouthRightPosition.x +50 ;
 			int bottom = (int) Math.min(mouthLeftPosition.y, mouthRightPosition.y);
 			Drawable mMustacheGraphic = new BitmapDrawable(getResources(), mustacheBitmap);
 			if (mIsFrontFacing) {
@@ -341,7 +361,6 @@ public class FragmentCamera extends Fragment {
 			}
 			mMustacheGraphic.draw(canvas);
 		}
-
 		@Override
 		public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition) {
 			super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
@@ -371,7 +390,7 @@ public class FragmentCamera extends Fragment {
 			try {
 				Bundle bundle = data.getExtras();
 				switch (bundle.getInt("code", -1)) {
-					case RESULT_CODE_EYE:
+					case RESULT_CODE_EYE	:
 						eyeBitmap = data.getParcelableExtra("bmp_img");
 						break;
 					case RESULT_CODE_NOSE:
@@ -383,6 +402,9 @@ public class FragmentCamera extends Fragment {
 					case RESULT_CODE_HEAD:
 						headBitmap = data.getParcelableExtra("bmp_img");
 						break;
+                    case RESULT_CODE_NOSE_FACE:
+                       noseFaceBitmap = data.getParcelableExtra("bmp_img");
+                        break;
 				}
 			}
 			catch (Exception e) {
