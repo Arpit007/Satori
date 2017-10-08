@@ -1,7 +1,5 @@
 package com.dauntless.starkx.satori.Adapter;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -19,56 +17,37 @@ import java.util.ArrayList;
  * Created by sonu on 6/10/17.
  */
 
-public class ContactsAdapter extends ArrayAdapter<Contacts>
-{
-
-	private static LayoutInflater inflater = null;
-	private Activity activity;
+public class ContactsAdapter extends ArrayAdapter<Contacts> {
 	private ArrayList<Contacts> contacts;
-	private Context mContext;
 
-	public ContactsAdapter(Activity activity, ArrayList<Contacts> contacts, Context mContext)
-	{
+	public ContactsAdapter(ArrayList<Contacts> contacts, Context mContext) {
 		super(mContext, R.layout.contacts_list, contacts);
-		this.activity = activity;
 		this.contacts = contacts;
-		this.mContext = mContext;
 	}
 
 	@NonNull
 	@Override
-	public View getView(int position, View convertView, @NonNull ViewGroup parent)
-	{
-
-		Contacts C = getItem(position);
-		ViewHolder viewHolder;
-		View vi;
-		if (convertView == null)
-		{
-			viewHolder = new ViewHolder();
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(getContext());
 			convertView = inflater.inflate(R.layout.contacts_list, parent, false);
-			viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-			viewHolder.number = (TextView) convertView.findViewById(R.id.number);
-			vi = convertView;
-			convertView.setTag(viewHolder);
-		}
-		else {
-			viewHolder = (ViewHolder) convertView.getTag();
-			vi = convertView;
 		}
 
-		viewHolder.name.setText(C.name);
-		viewHolder.number.setText(C.number);
+		Contacts contact = contacts.get(position);
+		ViewHolder viewHolder = new ViewHolder(convertView);
+		viewHolder.name.setText(contact.name);
+		viewHolder.number.setText(contact.number);
 
-		return vi;
+		return convertView;
 	}
 
-	public class ViewHolder
-	{
+	public class ViewHolder {
 		TextView name;
 		TextView number;
+
+		ViewHolder(View view) {
+			name = (TextView) view.findViewById(R.id.name);
+			number = (TextView) view.findViewById(R.id.number);
+		}
 	}
-
-
 }

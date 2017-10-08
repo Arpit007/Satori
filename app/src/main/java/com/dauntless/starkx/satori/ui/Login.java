@@ -3,10 +3,8 @@ package com.dauntless.starkx.satori.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -15,26 +13,22 @@ import android.widget.Toast;
 
 import com.dauntless.starkx.satori.R;
 import com.dauntless.starkx.satori.etc.Connection;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.dauntless.starkx.satori.etc.ReadContacts;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class Login extends AppCompatActivity
-{
+public class Login extends AppCompatActivity {
 	Button login;
 	EditText number;
 	ProgressDialog progressDialog;
-	JSONArray Numbers = new JSONArray();
-	Map<String, String> Contacts = new HashMap<>();
-	boolean ContactsLoaded = false;
+	Map<String, String> ContactsMap;
+	JSONArray Numbers;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
@@ -47,52 +41,42 @@ public class Login extends AppCompatActivity
 		SetUp();
 	}
 
-	void SetUp()
-	{
-		login.setOnClickListener(new View.OnClickListener()
-		{
+	void SetUp() {
+		SetUpContacts();
+
+		login.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view)
-			{
+			public void onClick(View view) {
 				login.setEnabled(false);
 				progressDialog.show();
 
-				new Thread()
-				{
+				new Thread() {
 					@Override
-					public void run()
-					{
-						try
-						{
-							getContacts();
+					public void run() {
+						try {
 							JSONObject object = new JSONObject();
 							object.put("Number", "+91" + number.getText().toString());
 							object.put("Contacts", Numbers);
 
-							Connection.Post(Connection.getUrl() + "/user/login", object, new Connection.ConnectionResponse()
-							{
+							Connection.Post(Connection.getUrl() + "/user/login", object, new Connection.ConnectionResponse() {
 								@Override
-								public void JsonResponse(JSONObject object, boolean Success)
-								{
-									if (!Success)
-									{
+								public void JsonResponse(JSONObject object, boolean Success) {
+									if (!Success) {
 										hideDialog("Failed");
 										return;
 									}
-									try
-									{
-										if (object.getJSONObject("head").getInt("code") != 200)
-										{
+									try {
+										if (object.getJSONObject("head").getInt("code") != 200) {
 											hideDialog(object.getJSONObject("head").getString("message"));
 											return;
 										}
 										JSONArray contacts = object.getJSONObject("body").getJSONArray("contacts");
 										JSONArray jsonArray = new JSONArray();
-										for (int x = 0; x < contacts.length(); x++)
-										{
+
+										for (int x = 0; x < contacts.length(); x++) {
 											String num = contacts.getString(x);
 											JSONObject jsonObject = new JSONObject();
-											jsonObject.put("Name", Contacts.get(num));
+											jsonObject.put("Name", ContactsMap.get(num));
 											jsonObject.put("Number", num);
 											jsonArray.put(jsonObject);
 										}
@@ -108,16 +92,14 @@ public class Login extends AppCompatActivity
 										Login.this.startActivity(intent);
 										finish();
 									}
-									catch (Exception e)
-									{
+									catch (Exception e) {
 										e.printStackTrace();
 										hideDialog("Failed");
 									}
 								}
 							});
 						}
-						catch (Exception e)
-						{
+						catch (Exception e) {
 							e.printStackTrace();
 							hideDialog("Failed");
 						}
@@ -127,16 +109,12 @@ public class Login extends AppCompatActivity
 		});
 	}
 
-	void hideDialog(final String message)
-	{
-		new Handler(getMainLooper()).post(new Runnable()
-		{
+	void hideDialog(final String message) {
+		new Handler(getMainLooper()).post(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				login.setEnabled(true);
-				if (!message.isEmpty())
-				{
+				if (!message.isEmpty()) {
 					Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
 				}
 				progressDialog.dismiss();
@@ -144,32 +122,16 @@ public class Login extends AppCompatActivity
 		});
 	}
 
-	public synchronized void getContacts()
-	{
-		if (ContactsLoaded)
-		{
-			return;
-		}
-		ContactsLoaded = true;
-		String name, number;
-		Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-
-		PhoneNumberUtil pnu = PhoneNumberUtil.getInstance();
-
-		while (cursor.moveToNext())
-		{
-			try
-			{
-				name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-				number = pnu.format(pnu.parse(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)), "IN"),
-						PhoneNumberUtil.PhoneNumberFormat.E164);
-				Contacts.put(number, name);
-				Numbers.put(number);
+	void SetUpContacts() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ContactsMap = ReadContacts.getContacts(Login.this.getApplicationContext());
+				Numbers = new JSONArray();
+				for (String x : ContactsMap.keySet()) {
+					Numbers.put(x);
+				}
 			}
-			catch (Exception e)
-			{
-			}
-		}
-		cursor.close();
+		}).start();
 	}
 }
