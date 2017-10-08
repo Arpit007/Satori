@@ -87,13 +87,8 @@ public class SocketConnection
 		}
 	}
 
-	public void registerEvent(String Event, Emitter.Listener Handler){
-		socket.on(Event, Handler);
-	}
-
 	public Socket getSocket()
 	{
 		return socket;
 	}
-
 }

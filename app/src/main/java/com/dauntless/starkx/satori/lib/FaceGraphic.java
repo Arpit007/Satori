@@ -31,6 +31,7 @@ package com.dauntless.starkx.satori.lib;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.dauntless.starkx.satori.ui.camera.GraphicOverlay;
 
@@ -155,10 +156,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic
 
             // Draw the hat only if the subject's head is titled at a
             // sufficiently jaunty angle.
-            final float HEAD_TILT_HAT_THRESHOLD = 20.0f;
+            final float HEAD_TILT_HAT_THRESHOLD = 2.0f;
             if (Math.abs(eulerZ) > HEAD_TILT_HAT_THRESHOLD) {
-                renderer.drawHat(canvas, position, width, height, noseBasePosition);
-            }
+		        Log.d("========Graphics", "Drawn " + Math.abs(eulerZ));
+		        renderer.drawHat(canvas, position, width, height, noseBasePosition);
+	        }
+	        else {
+		        Log.d("========Graphics", "Not Drawn " + Math.abs(eulerZ));
+	        }
         }
     }
 
