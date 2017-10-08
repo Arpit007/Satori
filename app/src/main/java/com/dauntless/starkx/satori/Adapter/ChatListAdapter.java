@@ -57,8 +57,8 @@ public class ChatListAdapter extends ArrayAdapter<ChatList> {
 		TextView receiverNumber;
 
 		ViewHolder(View view) {
-			receiverName = (TextView) view.findViewById(R.id.name);
-			receiverNumber = (TextView) view.findViewById(R.id.number);
+			receiverName = (TextView) view.findViewById(R.id.contactName);
+			receiverNumber = (TextView) view.findViewById(R.id.contactNumber);
 			receiverImage = (ImageView) view.findViewById(R.id.userImage);
 		}
 	}

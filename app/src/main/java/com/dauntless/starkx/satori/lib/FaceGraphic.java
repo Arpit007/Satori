@@ -156,8 +156,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic
 
             // Draw the hat only if the subject's head is titled at a
             // sufficiently jaunty angle.
-            final float HEAD_TILT_HAT_THRESHOLD = 20.0f;
-	        if (Math.abs(eulerZ) > HEAD_TILT_HAT_THRESHOLD) {
+            final float HEAD_TILT_HAT_THRESHOLD = 2.0f;
+            if (Math.abs(eulerZ) > HEAD_TILT_HAT_THRESHOLD) {
 		        Log.d("========Graphics", "Drawn " + Math.abs(eulerZ));
 		        renderer.drawHat(canvas, position, width, height, noseBasePosition);
 	        }
