@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -44,6 +45,9 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.net.URL;
@@ -333,9 +337,9 @@ public class FragmentCamera extends Fragment {
         public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition) {
             super.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
 
-            int left = (int)mouthLeftPosition.x;
+            int left = (int)mouthLeftPosition.x + 1;
             int top = (int)noseBasePosition.y;
-            int right = (int)mouthRightPosition.x;
+            int right = (int)mouthRightPosition.x + 1;
             int bottom = (int)Math.min(mouthLeftPosition.y, mouthRightPosition.y);
             Drawable mMustacheGraphic = new BitmapDrawable(getResources(), mustacheBitmap);
             if (mIsFrontFacing) {
@@ -345,7 +349,6 @@ public class FragmentCamera extends Fragment {
             }
             mMustacheGraphic.draw(canvas);
         }
-
         @Override
         public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition) {
             super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
@@ -372,35 +375,27 @@ public class FragmentCamera extends Fragment {
     };
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_CODE_EYE) {
-            Bundle bundle = data.getExtras();
             try {
-                URL url = new URL(bundle.getString("mFilter"));
-                 eyeBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch(IOException e) {
+                 eyeBitmap = data.getParcelableExtra("bmp_img");
+            } catch(Exception e) {
                 System.out.println(e);
             }
         }else if(resultCode == RESULT_CODE_NOSE) {
-            Bundle bundle = data.getExtras();
             try {
-                URL url = new URL(bundle.getString("mFilter"));
-                noseBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch(IOException e) {
+                noseBitmap = data.getParcelableExtra("bmp_img");
+            } catch(Exception e) {
                 System.out.println(e);
             }
         }else if(resultCode == RESULT_CODE_MUSTACHE) {
-            Bundle bundle = data.getExtras();
             try {
-                URL url = new URL(bundle.getString("mFilter"));
-                mustacheBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch(IOException e) {
+                mustacheBitmap = data.getParcelableExtra("bmp_img");
+            } catch(Exception e) {
                 System.out.println(e);
             }
         }else if(resultCode == RESULT_CODE_HEAD) {
-            Bundle bundle = data.getExtras();
             try {
-                URL url = new URL(bundle.getString("mFilter"));
-                headBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch(IOException e) {
+                headBitmap = data.getParcelableExtra("bmp_img");
+            } catch(Exception e) {
                 System.out.println(e);
             }
         }

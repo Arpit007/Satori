@@ -16,8 +16,7 @@ import okhttp3.Response;
  * Created by Home Laptop on 06-Oct-17.
  */
 
-public class Connection
-{
+public class Connection {
 	public static final String BaseUrl = "https://stark-wallet.herokuapp.com/natal";
 	public static String TargetUrl = "";
 	static final MediaType jsonType = MediaType.parse("application/json; charset=utf-8");

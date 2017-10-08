@@ -22,7 +22,9 @@
         <activity
             android:name=".ui.Home"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            
+        </activity>
         <activity android:name=".ui.Login" />
         <activity android:name=".ui.Splash"
             android:theme="@style/NoActionBar">
@@ -44,7 +46,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.FragmentEyeFilter" />
+        <activity android:name=".ui.FragmentFilterPicker" />
         <activity
             android:name=".ui.FilterPicker"
             android:label="@string/title_activity_filter_picker"
