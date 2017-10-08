@@ -22,13 +22,13 @@
         <activity
             android:name=".ui.Home"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".ui.Login" />
-        <activity android:name=".ui.Splash">
+        <activity android:name=".ui.Splash"
+            android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -38,12 +38,17 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.FilterPicker" />
+        <activity android:name=".ui.FragmentEyeFilter" />
+        <activity
+            android:name=".ui.FilterPicker"
+            android:label="@string/title_activity_filter_picker"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

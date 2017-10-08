@@ -12,5 +12,6 @@
 
     <string name="type_your_message">Type a message</string>
     <string name="NoRecent">No recent</string>
+    <string name="title_activity_filter_picker">FilterPicker</string>
 
 </resources>

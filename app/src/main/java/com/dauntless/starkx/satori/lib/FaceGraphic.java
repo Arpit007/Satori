@@ -51,35 +51,30 @@ public class FaceGraphic extends GraphicOverlay.Graphic
     private EyePhysics mRightPhysics = new EyePhysics();
 
 
-    FaceGraphic(GraphicOverlay overlay, boolean isFrontFacing, Renderer renderer)
-    {
+    FaceGraphic(GraphicOverlay overlay, boolean isFrontFacing, Renderer renderer) {
         super(overlay);
         mIsFrontFacing = isFrontFacing;
         this.renderer = renderer;
     }
 
-    public void setRenderer(Renderer renderer)
-    {
+    public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
 
     /**
      * Update the face instance based on detection from the most recent frame.
      */
-    void update(FaceData faceData)
-    {
+    void update(FaceData faceData) {
         mFaceData = faceData;
         postInvalidate(); // Trigger a redraw of the graphic (i.e. cause draw() to be called).
     }
 
     @Override
-    public void draw(Canvas canvas)
-    {
+    public void draw(Canvas canvas) {
         // Confirm that the face data is still available
         // before using it.
         FaceData faceData = mFaceData;
-        if (faceData == null)
-        {
+        if (faceData == null) {
             return;
         }
         PointF detectPosition = faceData.getPosition();
@@ -161,8 +156,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic
             // Draw the hat only if the subject's head is titled at a
             // sufficiently jaunty angle.
             final float HEAD_TILT_HAT_THRESHOLD = 20.0f;
-            if (Math.abs(eulerZ) > HEAD_TILT_HAT_THRESHOLD)
-            {
+            if (Math.abs(eulerZ) > HEAD_TILT_HAT_THRESHOLD) {
                 renderer.drawHat(canvas, position, width, height, noseBasePosition);
             }
         }

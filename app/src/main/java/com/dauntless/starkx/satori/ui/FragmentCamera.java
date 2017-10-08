@@ -13,11 +13,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,7 +27,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.dauntless.starkx.satori.R;
@@ -59,6 +62,11 @@ public class FragmentCamera extends Fragment {
     private boolean mIsFrontFacing = true;
     private FloatingActionButton floatingActionButton;
     private Integer REQUEST_CODE_FILETR = 10;
+    private Integer RESULT_CODE_EYE = 10;
+    private Integer RESULT_CODE_NOSE = 11;
+    private Integer RESULT_CODE_MUSTACHE = 12;
+    private Integer RESULT_CODE_HEAD = 13;
+    private Bitmap eyeBitmap , noseBitmap , mustacheBitmap , headBitmap;
 
 
     public FragmentCamera() {
@@ -84,8 +92,7 @@ public class FragmentCamera extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 	    floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -304,41 +311,98 @@ public class FragmentCamera extends Fragment {
         public void drawEye(Canvas canvas, PointF eyePosition, float eyeRadius, PointF irisPosition, float irisRadius, boolean eyeOpen, boolean smiling)
         {
             super.drawEye(canvas, eyePosition, eyeRadius, irisPosition, irisRadius, eyeOpen, smiling);
+
         }
 
         @Override
-        public void drawNose(Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth)
-        {
+        public void drawNose(Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth) {
             super.drawNose(canvas, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth);
-        }
 
+            final float NOSE_FACE_WIDTH_RATIO = (float)(1 / 5.0);
+//            final float NOSE_FACE_WIDTH_RATIO = (float)(1 );
+            float noseWidth = faceWidth * NOSE_FACE_WIDTH_RATIO;
+            int left = (int)(noseBasePosition.x - (noseWidth / 2));
+            int right = (int)(noseBasePosition.x + (noseWidth / 2));
+            int top = (int)(leftEyePosition.y + rightEyePosition.y) / 2;
+            int bottom = (int)noseBasePosition.y;
+            Drawable mPigNoseGraphic = new BitmapDrawable(getResources(), noseBitmap);
+            mPigNoseGraphic.setBounds(left, top, right, bottom);
+            mPigNoseGraphic.draw(canvas);
+        }
         @Override
-        public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition)
-        {
+        public void drawMustache(Canvas canvas, PointF noseBasePosition, PointF mouthLeftPosition, PointF mouthRightPosition) {
             super.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
+
+            int left = (int)mouthLeftPosition.x;
+            int top = (int)noseBasePosition.y;
+            int right = (int)mouthRightPosition.x;
+            int bottom = (int)Math.min(mouthLeftPosition.y, mouthRightPosition.y);
+            Drawable mMustacheGraphic = new BitmapDrawable(getResources(), mustacheBitmap);
+            if (mIsFrontFacing) {
+                mMustacheGraphic.setBounds(left, top, right, bottom);
+            } else {
+                mMustacheGraphic.setBounds(right, top, left, bottom);
+            }
+            mMustacheGraphic.draw(canvas);
         }
 
         @Override
-        public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition)
-        {
+        public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition) {
             super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
+
+//            final float HAT_FACE_WIDTH_RATIO = (float)(1.0 / 4.0);
+            final float HAT_FACE_WIDTH_RATIO = (float)(1.0 );
+//            final float HAT_FACE_HEIGHT_RATIO = (float)(1.0 / 6.0);
+            final float HAT_FACE_HEIGHT_RATIO = (float)(1.0 / 2.0);
+            final float HAT_CENTER_Y_OFFSET_FACTOR = (float)(1.0 / 8.0);
+
+            float hatCenterY = facePosition.y + (faceHeight * HAT_CENTER_Y_OFFSET_FACTOR);
+            float hatWidth = faceWidth * HAT_FACE_WIDTH_RATIO;
+            float hatHeight = faceHeight * HAT_FACE_HEIGHT_RATIO;
+
+            int left = (int)(noseBasePosition.x - (hatWidth / 2));
+            int right = (int)(noseBasePosition.x + (hatWidth / 2));
+            int top = (int)(hatCenterY - (hatHeight / 2));
+            int bottom = (int)(hatCenterY + (hatHeight / 2));
+            Drawable mHatGraphic = new BitmapDrawable(getResources(), headBitmap);
+
+            mHatGraphic.setBounds(left, top, right, bottom);
+            mHatGraphic.draw(canvas);
         }
     };
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == REQUEST_CODE_FILETR) {
+        if (resultCode == RESULT_CODE_EYE) {
             Bundle bundle = data.getExtras();
-
             try {
                 URL url = new URL(bundle.getString("mFilter"));
-                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-                Toast.makeText(getActivity() , image.toString(), Toast.LENGTH_LONG).show();
+                 eyeBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
             } catch(IOException e) {
                 System.out.println(e);
             }
-
-
+        }else if(resultCode == RESULT_CODE_NOSE) {
+            Bundle bundle = data.getExtras();
+            try {
+                URL url = new URL(bundle.getString("mFilter"));
+                noseBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch(IOException e) {
+                System.out.println(e);
+            }
+        }else if(resultCode == RESULT_CODE_MUSTACHE) {
+            Bundle bundle = data.getExtras();
+            try {
+                URL url = new URL(bundle.getString("mFilter"));
+                mustacheBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch(IOException e) {
+                System.out.println(e);
+            }
+        }else if(resultCode == RESULT_CODE_HEAD) {
+            Bundle bundle = data.getExtras();
+            try {
+                URL url = new URL(bundle.getString("mFilter"));
+                headBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch(IOException e) {
+                System.out.println(e);
+            }
         }
     }
 }
