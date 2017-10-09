@@ -182,4 +182,8 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 			return null;
 		}
 	}
+	@Override
+	public void onBackPressed() {
+		this.finish();
+	}
 }

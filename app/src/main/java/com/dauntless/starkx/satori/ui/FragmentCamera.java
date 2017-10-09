@@ -336,7 +336,7 @@ public class FragmentCamera extends Fragment {
             float noseWidth = faceWidth * NOSE_FACE_WIDTH_RATIO;
             int left = (int) ( noseBasePosition.x - ( noseWidth / 2 ) );
             int right = (int) ( noseBasePosition.x + ( noseWidth / 2 ) );
-            int top = (int) ( leftEyePosition.y + rightEyePosition.y ) /2;
+            int top = (int) ( leftEyePosition.y + rightEyePosition.y ) /2 + 40;
 //            int top = (int) ( *faceHeight) ;
             int bottom = (int) noseBasePosition.y;
             Drawable mPigNoseGraphic = new BitmapDrawable(getResources(), noseFaceBitmap);
