@@ -151,7 +151,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic
             renderer.drawEye(canvas, rightEyePosition, eyeRadius, rightIrisPosition, irisRadius, rightEyeOpen, smiling);
 
             renderer.drawNose(canvas, noseBasePosition, leftEyePosition, rightEyePosition, width);
-            renderer.drawNoseFace(canvas, noseBasePosition, leftEyePosition, rightEyePosition, width , height);
+            renderer.drawNoseFace(canvas,position, noseBasePosition, leftEyePosition, rightEyePosition, width , height);
 
             renderer.drawMustache(canvas, noseBasePosition, mouthLeftPosition, mouthRightPosition);
 
@@ -177,7 +177,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic
         public void drawNose(Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth)
         {
         }
-        public void drawNoseFace(Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth , float faceHeight)
+        public void drawNoseFace(Canvas canvas, PointF facePosition , PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth , float faceHeight)
         {
         }
 

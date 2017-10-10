@@ -44,6 +44,7 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
+
 /**
  * Created by sonu on 6/10/17.
  */
@@ -330,16 +331,19 @@ public class FragmentCamera extends Fragment {
 			mPigNoseGraphic.draw(canvas);
 		}
         @Override
-        public void drawNoseFace (Canvas canvas, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth , float faceHeight) {
-            super.drawNoseFace(canvas, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth  , faceHeight);
-            final float NOSE_FACE_WIDTH_RATIO = (float)(1 );
-            float noseWidth = faceWidth * NOSE_FACE_WIDTH_RATIO;
-            int left = (int) ( noseBasePosition.x - ( noseWidth / 2 ) );
-            int right = (int) ( noseBasePosition.x + ( noseWidth / 2 ) );
-            int top = (int) ( leftEyePosition.y + rightEyePosition.y ) /2 + 40;
-//            int top = (int) ( *faceHeight) ;
-            int bottom = (int) noseBasePosition.y;
-            Drawable mPigNoseGraphic = new BitmapDrawable(getResources(), noseFaceBitmap);
+        public void drawNoseFace (Canvas canvas,PointF facePosition, PointF noseBasePosition, PointF leftEyePosition, PointF rightEyePosition, float faceWidth , float faceHeight) {
+            super.drawNoseFace(canvas,facePosition, noseBasePosition, leftEyePosition, rightEyePosition, faceWidth  , faceHeight);
+
+			int x =(int)(facePosition.x + faceWidth / 2);
+			int y = (int)(facePosition.y + faceHeight / 2);
+			int xOffset =(int) (faceWidth / .67f);
+			int yOffset = (int)(faceHeight / 1.7f);
+			int left = x - xOffset;
+			int top = y - yOffset;
+			int right = (int)(x -xOffset/2.8);
+			int bottom = (int)(y + yOffset/1.3f);
+
+			Drawable mPigNoseGraphic = new BitmapDrawable(getResources(), noseFaceBitmap);
             mPigNoseGraphic.setBounds(left, top, right, bottom);
             mPigNoseGraphic.draw(canvas);
         }
@@ -364,9 +368,9 @@ public class FragmentCamera extends Fragment {
 		@Override
 		public void drawHat(Canvas canvas, PointF facePosition, float faceWidth, float faceHeight, PointF noseBasePosition) {
 			super.drawHat(canvas, facePosition, faceWidth, faceHeight, noseBasePosition);
-//            final float HAT_FACE_WIDTH_RATIO = (float)(1.0 / 4.0);
+//            final float HAT_FACE_WIDTH_RATIO = (float)(one.0 / 4.0);
 			final float HAT_FACE_WIDTH_RATIO = (float) ( 1.0 );
-//            final float HAT_FACE_HEIGHT_RATIO = (float)(1.0 / 6.0);
+//            final float HAT_FACE_HEIGHT_RATIO = (float)(one.0 / 6.0);
 			final float HAT_FACE_HEIGHT_RATIO = (float) ( 1.0 / 2.0 );
 			final float HAT_CENTER_Y_OFFSET_FACTOR = (float) ( 1.0 / 8.0 );
 
@@ -384,7 +388,6 @@ public class FragmentCamera extends Fragment {
 			mHatGraphic.draw(canvas);
 		}
 	};
-
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
 			try {
@@ -403,7 +406,11 @@ public class FragmentCamera extends Fragment {
 						headBitmap = data.getParcelableExtra("bmp_img");
 						break;
                     case RESULT_CODE_NOSE_FACE:
-                       noseFaceBitmap = data.getParcelableExtra("bmp_img");
+                        noseFaceBitmap = data.getParcelableExtra("bmp_img");
+						eyeBitmap = null;
+						noseBitmap = null;
+						mustacheBitmap = null;
+						headBitmap = null;
                         break;
 				}
 			}
