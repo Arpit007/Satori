@@ -12,7 +12,7 @@ import io.socket.emitter.Emitter;
 
 public class SocketConnection
 {
-	private String Number;
+	private String Number = "";
 	private static SocketConnection socketConnection;
 	private Socket socket;
 

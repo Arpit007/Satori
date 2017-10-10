@@ -48,9 +48,12 @@
         <activity
             android:name=".ui.FilterPicker"
             android:label="@string/title_activity_filter_picker"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.SingleChatWindow"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
     </application>
 
 </manifest>

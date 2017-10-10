@@ -17,6 +17,13 @@ public class NetworkChanged extends BroadcastReceiver
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		SocketConnection.getInstance().reconnect();
+		if (Connectivity.isOnline()) {
+			if (SocketConnection.getInstance().getSocket() == null || !SocketConnection.getInstance().getSocket().connected()) {
+				SocketConnection.getInstance().initialize(context.getSharedPreferences("Contacts", Context.MODE_PRIVATE).getString("Number", ""));
+			}
+			else {
+				SocketConnection.getInstance().reconnect();
+			}
+		}
 	}
 }
