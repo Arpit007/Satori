@@ -20,7 +20,7 @@ public class Connectivity
 		Runtime runtime = Runtime.getRuntime();
 		try
 		{
-			Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+			Process ipProcess = runtime.exec("/system/bin/ping -c one 8.8.8.8");
 			int exitValue = ipProcess.waitFor();
 			return ( exitValue == 0 );
 		}

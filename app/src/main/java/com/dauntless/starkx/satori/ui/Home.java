@@ -91,9 +91,9 @@ public class Home extends AppCompatActivity {
 			switch (position) {
 				case 0:
 					return FragmentCamera.newInstance();
+//				case 1:
+//					return FragmentChat.newInstance();
 				case 1:
-					return FragmentChat.newInstance();
-				case 2:
 					return FragmentContacts.newInstance();
 			}
 			return null;
@@ -101,7 +101,7 @@ public class Home extends AppCompatActivity {
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -109,10 +109,10 @@ public class Home extends AppCompatActivity {
 			switch (position) {
 				case 0:
 					return "Camera";
+//				case 1:
+//					return "Chat";
 				case 1:
 					return "Chat";
-				case 2:
-					return "Contacts";
 			}
 			return null;
 		}

@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dauntless.starkx.satori.Model.Contacts;
 import com.dauntless.starkx.satori.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,17 +39,27 @@ public class ContactsAdapter extends ArrayAdapter<Contacts> {
 		ViewHolder viewHolder = new ViewHolder(convertView);
 		viewHolder.name.setText(contact.name);
 		viewHolder.number.setText(contact.number);
+        Picasso.with(getContext())
+                .load("http://smalldata.io/img/sdl_logo.png")
+                .fit().centerInside()
+                .placeholder(R.drawable.loading_fail)
+                .error(R.drawable.loading_fail)
+                .into(viewHolder.imageView);
 
-		return convertView;
+
+
+        return convertView;
 	}
 
 	public class ViewHolder {
 		TextView name;
 		TextView number;
+		ImageView imageView;
 
 		ViewHolder(View view) {
 			name = (TextView) view.findViewById(R.id.name);
 			number = (TextView) view.findViewById(R.id.number);
+			imageView = (ImageView) view.findViewById(R.id.userImage);
 		}
 	}
 }

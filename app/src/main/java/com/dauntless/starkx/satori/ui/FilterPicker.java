@@ -108,7 +108,6 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 			hideDialog("Restart App with Active Network Connection");
 			return;
 		}
-
 		JSONArray eyes = object.getJSONObject("body").getJSONObject("res").getJSONArray("eyes");
 		for (int x = 0; x < eyes.length(); x++) {
 			eyeUrls.add(Connection.getUrl() + eyes.getString(x));
@@ -181,5 +180,9 @@ public class FilterPicker extends AppCompatActivity implements MessagePasser {
 			}
 			return null;
 		}
+	}
+	@Override
+	public void onBackPressed() {
+		this.finish();
 	}
 }

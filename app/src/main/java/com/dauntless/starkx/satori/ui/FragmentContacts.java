@@ -1,6 +1,7 @@
 package com.dauntless.starkx.satori.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -58,8 +59,12 @@ public class FragmentContacts extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Contacts contacts = contactDetails.get(position);
-				Snackbar.make(view, contacts.name + "\n" + contacts.number, Snackbar.LENGTH_LONG)
-						.setAction("No action", null).show();
+				Intent intent = new Intent(getActivity() , SingleChatWindow.class);
+				intent.putExtra("name" , contacts.name);
+				intent.putExtra("mobile" , contacts.number);
+				startActivity(intent);
+//				Snackbar.make(view, contacts.name + "\n" + contacts.number, Snackbar.LENGTH_LONG)
+//						.setAction("No action", null).show();
 			}
 		});
 	}
