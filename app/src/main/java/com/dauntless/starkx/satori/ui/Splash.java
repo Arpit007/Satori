@@ -152,7 +152,9 @@ public class Splash extends AppCompatActivity {
 			MoveToNext();
 		}
 		else {
-			Connection.Get(Connection.BaseUrl + "/url", new JSONObject(), false, new Connection.ConnectionResponse() {
+			Connection.TargetUrl = "http://192.168.137.1:3000";
+			MoveToNext();
+			/*Connection.Get(Connection.BaseUrl + "/url", new JSONObject(), false, new Connection.ConnectionResponse() {
 				@Override
 				public void StringResponse(String object, boolean Success) {
 					if (Success) {
@@ -161,7 +163,7 @@ public class Splash extends AppCompatActivity {
 					}
 					MoveToNext();
 				}
-			});
+			});*/
 		}
 	}
 

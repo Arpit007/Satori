@@ -46,11 +46,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.FragmentFilterPicker" />
         <activity
             android:name=".ui.FilterPicker"
             android:label="@string/title_activity_filter_picker"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
